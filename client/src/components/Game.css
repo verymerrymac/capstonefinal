@@ -1,0 +1,29 @@
+.gamearea {
+    width: 800px;
+    height: 1000px;
+    display: flex justify-content-around;
+    background-color: lightcoral;
+    border: white dotted;
+    font-family: 'Baloo Chettan', cursive;
+    font-size: 2em;
+
+}  
+
+.icons:hover {
+    cursor: pointer;
+}
+
+
+.celebName {
+    font-family: 'Baloo Chettan', cursive;
+  
+  }
+
+  img {
+    text-indent: -10000px
+}
+
+.results {
+    color: white;
+    
+}
