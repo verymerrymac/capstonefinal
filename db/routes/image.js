@@ -7,6 +7,8 @@ const Search = require('azure-cognitiveservices-imagesearch');
 const CognitiveServicesCredentials = require('ms-rest-azure').CognitiveServicesCredentials;
 let https = require('https');
 let axios = require('axios');
+const u = require('unirest'); //intsall from: http://unirest.io/nodejs.html
+
 
 router.post('/save', ((req, res, next) => {
     // const imgTimeStamp = new Date().getTime().toString();
@@ -62,22 +64,73 @@ router.post('/clarifai', (req, res, next) => {
     .catch((err) => console.log(err))
 })
 
-router.get('/bing/celebName/:name', (request, reply, next) => {
-let subscriptionKey = '62dac51e1263428f903a5b70f3c5f659'
-let term = request.params.name;
-let url = 'https://api.cognitive.microsoft.com/bing/v7.0/images/search?q=' + encodeURIComponent(term)
 
-let request_params = {
-    headers : {
-    'Ocp-Apim-Subscription-Key' : subscriptionKey,
-    }
-};
 
-axios.get(url, request_params)
-    .then(res => reply.send(res.data))
-    .catch(err => console.log(err))
+router.get('/bing/celebName/:name', (req, res, next) => {
+    console.log('start')
 
-})
+    //Replace the following string value with your valid X-RapidAPI-Key.
+    
+    Your_X_RapidAPI_Key = "0771d630cfmsh28dc1ea910c0efbp1ccf17jsne1c1c73dbf84";
+    //The query parameters: (update according to your search query)
+    q = req.params.name
+    pageNumber = 1;
+    pageSize = 10; 
+    autoCorrect = true; 
+    safeSearch = false; 
+    
+    u.get("https://contextualwebsearch-websearch-v1.p.rapidapi.com/api/Search/ImageSearchAPI?q=" + q + "&pageNumber=" + pageNumber + "&pageSize=" + pageSize+ "&autoCorrect=" + autoCorrect+ "&safeSearch=" + safeSearch)
+        .header("X-RapidAPI-Key", Your_X_RapidAPI_Key)
+        .end(function(result) {
+            // console.log(result.body.value[i])
+            res.send(result.body.value[0].url)
+    
+            // console.log("HTTP status code: " + result.status);
+    
+            //Get the numer of items returned
+            // totalCount = result.body["totalCount"];
+
+            // let array = []
+            // let num = 1
+            // array.push(result.body.value[i].url);
+            // for (i = 0; i < num; i++) {
+            //     res.send(result.body.value[i].url)
+            // }
+
+
+                // //Get the image
+                // imageUrl = image["url"];
+                // imageHeight = image["height"];
+                // imageWidth = image["width"];
+    
+                // //Get the image thumbail
+                // thumbnail = image["thumbnail"];
+                // thumbnailHeight = image["thumbnailHeight"];
+                // thumbnailWidth = image["thumbnailWidth"];
+    
+                // //An example: Output the webpage url, title and published date:
+                // console.log("imageUrl: %s. imageHeight: %s. imageWidth: %s.\n", imageUrl, imageHeight, imageWidth);
+            // }
+        
+        });
+    });
+
+// router.get('/bing/celebName/:name', (request, reply, next) => {
+// let subscriptionKey = '62dac51e1263428f903a5b70f3c5f659'
+// let term = request.params.name;
+// let url = 'https://api.cognitive.microsoft.com/bing/v7.0/images/search?q=' + encodeURIComponent(term)
+
+// let request_params = {
+//     headers : {
+//     'Ocp-Apim-Subscription-Key' : subscriptionKey,
+//     }
+// };
+
+// axios.get(url, request_params)
+//     .then(res => reply.send(res.data))
+//     .catch(err => console.log(err))
+
+// })
 
 // router.get('/bing/celebName', (req, res, next) => {
 
@@ -120,5 +173,3 @@ axios.get(url, request_params)
 
 
 module.exports = router;
-
-

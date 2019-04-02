@@ -1,6 +1,6 @@
 .gamearea {
     width: 800px;
-    height: 1000px;
+    height: 1200px;
     display: flex justify-content-around;
     background-color: lightcoral;
     border: white dotted;
@@ -25,5 +25,10 @@
 
 .results {
     color: white;
+    
+}
+
+.picture {
+    height: 400px;
     
 }
