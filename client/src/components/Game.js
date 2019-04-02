@@ -3,6 +3,7 @@ import './Game.css';
 import { MDBIcon } from "mdbreact";
 import Webcam from 'react-webcam';
 import axios from 'axios';
+import { urlencoded } from 'body-parser';
 // import { Redirect } from 'react-router-dom';
 
 class Game extends Component {
@@ -41,7 +42,12 @@ class Game extends Component {
         }, 200)
         axios.post('/image/clarifai', {imageSrc}).then(res => {
             this.setState({celebrityName: res.data.outputs[0].data.regions[0].data.face.identity.concepts[0].name})
-            axios.post('/image/bing/celebName', {celebrityName: res.data.outputs[0].data.regions[0].data.face.identity.concepts[0].name})
+            console.log('don')
+            let name = res.data.outputs[0].data.regions[0].data.face.identity.concepts[0].name
+            let newName = encodeURIComponent(name)
+            console.log(newName)
+            axios.post('/image/bing/celebName/' + newName)
+                .then(res => console.log(res.data))
         }
     )};
 
