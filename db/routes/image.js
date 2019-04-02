@@ -5,6 +5,8 @@ var path = require('path');
 const Clarifai = require('clarifai');
 const Search = require('azure-cognitiveservices-imagesearch');
 const CognitiveServicesCredentials = require('ms-rest-azure').CognitiveServicesCredentials;
+let https = require('https');
+let axios = require('axios');
 
 router.post('/save', ((req, res, next) => {
     // const imgTimeStamp = new Date().getTime().toString();
@@ -41,8 +43,9 @@ router.get(`/:username/findImage`, (req, res, next) => {
 })
 
 router.post('/clarifai', (req, res, next) => {
+    console.log('hey')
     const imageSrc = req.body.imageSrc;    
-    console.log(imageSrc)
+    // console.log(imageSrc)
 
     const app = new Clarifai.App({
         apiKey: '8469266d2783471ead47f572d20b4171'
@@ -59,42 +62,59 @@ router.post('/clarifai', (req, res, next) => {
     .catch((err) => console.log(err))
 })
 
-router.get('/bing/celebName', (req, res, next) => {
+router.get('/bing/celebName/:name', (request, reply, next) => {
+let subscriptionKey = '62dac51e1263428f903a5b70f3c5f659'
+let term = request.params.name;
+let url = 'https://api.cognitive.microsoft.com/bing/v7.0/images/search?q=' + encodeURIComponent(term)
 
-    //replace this value with your valid subscription key.
-    let serviceKey = "1c7f2d9c-db18-4076-bb1b-d5ce259ed294";
+let request_params = {
+    headers : {
+    'Ocp-Apim-Subscription-Key' : subscriptionKey,
+    }
+};
 
-    //the search term for the request
-    let searchTerm = req.body.celebName;
-    console.log("searchTerm")
-
-    //instantiate the image search client 
-    let credentials = new CognitiveServicesCredentials(serviceKey);
-    let imageSearchApiClient = new Search.ImageSearchAPIClient(credentials);
-
-    //a helper function to perform an async call to the Bing Image Search API
-    const sendQuery = async () => {
-        return await imageSearchApiClient.imagesOperations.search({searchTerm});
-    };
-
-    sendQuery().then(imageResults => {
-        if (imageResults == null) {
-        console.log("No image results were found.");
-        }
-        else {
-            console.log(`Total number of images returned: ${imageResults.value.length}`);
-            let firstImageResult = imageResults.value[0];
-            //display the details for the first image result. After running the application,
-            //you can copy the resulting URLs from the console into your browser to view the image.
-            console.log(`Total number of images found: ${imageResults.value.length}`);
-            console.log(`Copy these URLs to view the first image returned:`);
-            console.log(`First image thumbnail url: ${firstImageResult.thumbnailUrl}`);
-        }
-    })
-    .catch(err => console.error(err))
+axios.get(url, request_params)
+    .then(res => reply.send(res.data))
+    .catch(err => console.log(err))
 
 })
-// res.sendFile();
+
+// router.get('/bing/celebName', (req, res, next) => {
+
+//     //replace this value with your valid subscription key.
+//     let serviceKey = "62dac51e1263428f903a5b70f3c5f659";
+
+//     //the search term for the request
+//     let searchTerm = req.body.celebName;
+//     console.log("searchTerm")
+
+//     //instantiate the image search client 
+//     let credentials = new CognitiveServicesCredentials(serviceKey);
+//     let imageSearchApiClient = new Search.ImageSearchAPIClient(credentials);
+
+//     //a helper function to perform an async call to the Bing Image Search API
+//     const sendQuery = async () => {
+//         return await imageSearchApiClient.imagesOperations.search({searchTerm});
+//     };
+
+//     sendQuery().then(imageResults => {
+//         if (imageResults == null) {
+//         console.log("No image results were found.");
+//         }
+//         else {
+//             console.log(`Total number of images returned: ${imageResults.value.length}`);
+//             let firstImageResult = imageResults.value[0];
+//             //display the details for the first image result. After running the application,
+//             //you can copy the resulting URLs from the console into your browser to view the image.
+//             console.log(`Total number of images found: ${imageResults.value.length}`);
+//             console.log(`Copy these URLs to view the first image returned:`);
+//             console.log(`First image thumbnail url: ${firstImageResult.thumbnailUrl}`);
+//         }
+//     })
+//     .catch(err => console.error(err))
+
+// })
+// // // res.sendFile();
 
 
 
