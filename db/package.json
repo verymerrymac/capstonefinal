@@ -27,6 +27,7 @@
     "passport-local": "^1.0.0",
     "pg-promise": "^8.6.4",
     "react-native": "^0.59.1",
-    "request": "^2.88.0"
+    "request": "^2.88.0",
+    "unirest": "^0.6.0"
   }
 }

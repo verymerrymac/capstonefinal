@@ -12,7 +12,8 @@ class Game extends Component {
         this.state = {
             username: 0,
             // imageSrc: false,
-            celebrityName: ""
+            celebrityName: "",
+            celebrityPic: null
         }
     }
     
@@ -46,8 +47,9 @@ class Game extends Component {
             let name = res.data.outputs[0].data.regions[0].data.face.identity.concepts[0].name
             let newName = encodeURIComponent(name)
             console.log(newName)
-            axios.post('/image/bing/celebName/' + newName)
-                .then(res => console.log(res.data))
+            axios.get('/image/bing/celebName/' + newName)
+                .then(res => this.setState({celebrityPic: res.data}))
+                .catch(err => console.log(err))
         }
     )};
 
@@ -75,7 +77,7 @@ class Game extends Component {
             />
             <br/>
             <div>Your carefully calculated celebrity look-alike is: <br/><br /> {this.state.celebrityName}</div><br />
-            <img src={`/image/${this.state.username}/findImage`} width={160} height={100} mode='fit'/>
+            <div><img src= {this.state.celebrityPic} className="picture"></img></div>
             </div>
         ) 
     }
